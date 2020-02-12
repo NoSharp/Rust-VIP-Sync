@@ -1,4 +1,4 @@
-﻿using Oxide.Core;
+using Oxide.Core;
 using Oxide.Core.Database;
 using Oxide.Core.Libraries;
 using Oxide.Core.Libraries.Covalence;
@@ -7,13 +7,13 @@ using System.Collections.Generic;
 namespace Oxide.Plugins
 {
     [Info("VIPSync", "NoSharp", "1.0.0")]
-    class VIPSync : RustPlugin
+    sealed class VIPSync : RustPlugin
     {
 
         #region Fields
 
         // For when I'm debugging this plugin.
-        bool Debug = true;
+        bool Debug = false;
 
         // Instantiates the Umod/oxide SqlLibrary.
         private Core.MySql.Libraries.MySql sqlLibrary = Interface.Oxide.GetLibrary<Core.MySql.Libraries.MySql>();
@@ -206,8 +206,8 @@ namespace Oxide.Plugins
         void UpdatePlayer(IPlayer ply)
         {
             string ranks = string.Join(",", permission.GetUserGroups(ply.Id));
-            string userId = BasePlayer.activePlayerList.Find(x => x.UserIDString == ply.Id).UserIDString;
-            string query = $"UPDATE {Config["Table"] as string} SET Ranks = \"{ranks}\" WHERE UserID = {userId}";
+            
+            string query = $"UPDATE {Config["Table"] as string} SET Ranks = \"{ranks}\" WHERE UserID = {ply.Id}";
 
             if (Debug) Puts(query);
 
